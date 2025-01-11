@@ -1,0 +1,1 @@
+A sample Python interface to a MariaDB database.
