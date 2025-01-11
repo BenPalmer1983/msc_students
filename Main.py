@@ -1,18 +1,19 @@
 import tkinter as tk
-from App import SampleApp
+from App import App
 from Splash import Splash
 
 
+# Main entry point to the program
 def main():
 
+    # Create a splash screen
     splash = Splash()
 
-    app = SampleApp()
+    # Create instance of the app and run it
+    app = App()
     app.mainloop()
 
 
-
-
-
-if __name__ == "__main__":
+# Run main
+if(__name__ == "__main__"):
     main()

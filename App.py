@@ -2,9 +2,13 @@ import tkinter as tk
 from pages import StartPage, PageOne, PageTwo
 
 
-class SampleApp(tk.Tk):
+class App(tk.Tk):
+
     def __init__(self, *args, **kwargs):
+
         tk.Tk.__init__(self, *args, **kwargs)
+
+        # Set up the size of the screen
         self.geometry("1080x800")
         self.frames = {}
         container = tk.Frame(self)

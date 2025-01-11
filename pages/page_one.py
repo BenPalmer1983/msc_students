@@ -1,24 +1,30 @@
+"""
+Add Students List Page
+"""
+
+
 import tkinter as tk
 from Conn import Conn
+from tkinter import messagebox
 
 class PageOne(tk.Frame):
 
     last_list = None
 
+
+    # Constructor
+    def __init__(self, parent, controller):
+
+        tk.Frame.__init__(self, parent)
+        self.display_page(controller)
+
+
+    # Load data from database
     def load(self):
 
-        print("LOAD")
         conn = Conn.connect()
 
         try:
-
-            print("Connection established")
-
-            '''
-            SELECT UPDATE_TIME
-            FROM information_schema.tables
-            WHERE table_schema = 'your_database' AND table_name = 'example';
-            '''
 
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM students")
@@ -31,6 +37,7 @@ class PageOne(tk.Frame):
                 email_address = row[3]
                 last_list = last_list + first_name + last_name + email_address
             
+            # Only rebuild list box if the data has changed in the database
             rebuild = False
             if(self.last_list is None):
                 rebuild = True
@@ -57,15 +64,17 @@ class PageOne(tk.Frame):
             conn.close()
 
 
+
+    # Update data
     def update(self):
         self.load()
         self.after(1000, self.update)
 
 
+    # Add a new student
+    def add_student(self):
 
-    def add_name(self):
-
-        # Get the first and last name from the entry widgets
+        # Get the fields 
         first_name = self.first_name_entry.get()
         last_name = self.last_name_entry.get()
         email_address = self.email_address_entry.get()
@@ -78,12 +87,12 @@ class PageOne(tk.Frame):
 
                 cursor = conn.cursor()
                 sql = "INSERT INTO students (`first_name`, `last_name`, `email_address`) VALUES ('" + first_name + "', '" + last_name + "', '" + email_address + "');"
-                print(sql)
                 cursor.execute(sql)
                 conn.commit()
 
             except Exception as e:
                 print("Error: ", e)
+                messagebox.showinfo("Error: ", e)
             finally:
                 cursor.close()
                 conn.close()
@@ -95,9 +104,7 @@ class PageOne(tk.Frame):
             self.load()
 
 
-    def __init__(self, parent, controller):
-
-        tk.Frame.__init__(self, parent)
+    def display_page(self, controller):
         label = tk.Label(self, text="Students")
         label.pack(pady=10, padx=10)
 
@@ -133,7 +140,7 @@ class PageOne(tk.Frame):
         self.email_address_label.grid(row=2, column=0)
 
         # Button to add new name to the list
-        add_button = tk.Button(entry_frame, text="Add Name", command=self.add_name)
+        add_button = tk.Button(entry_frame, text="Add Name", command=self.add_student)
         add_button.grid(row=3, columnspan=4, pady=5)
 
         button = tk.Button(self, text="Back to Start",
